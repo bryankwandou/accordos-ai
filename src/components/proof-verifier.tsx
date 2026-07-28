@@ -6,8 +6,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import type { AgreementReceipt } from "@/lib/solana/receipt";
 
 export function ProofVerifier() {
-  const [signature,setSignature]=useState("3rYyV272QcMgJiQ6SUTxABzTppbwmWK3CRsZKtSY5noP8NJKeBcHuurs6Jc3RRq3dUpHd3wZPhabbkv8VvAQi6ML");
-  const [hash,setHash]=useState("b2f11b4002eda9a41150304ca2953429d60b462dc9c030e8ab0ab5d24df1580d");
+  const [signature,setSignature]=useState("Kh6ck3wzaMeATq2q2ZaMEc7DqcBZ86qY7uHqctFtrLE59pVtvgeNQewikQ49iWf2AxpeKWXxEtFq2zwKMuamP35");
+  const [hash,setHash]=useState("1e1321fa26215891c548254c30ab1d33ec6de6124b8c20b1f6ce453dd0eb5cf0");
   const [receipt,setReceipt]=useState<AgreementReceipt|null>(null); const [result,setResult]=useState<{verified:boolean;reason?:string;slot?:number;signaturesValid?:boolean;onChainValid?:boolean}|null>(null); const [busy,setBusy]=useState(false); const fileRef=useRef<HTMLInputElement>(null);
   async function verify(){setBusy(true);setResult(null);const endpoint=receipt?"/api/receipts/verify":"/api/proof/verify";const body=receipt??{signature,hash};const response=await fetch(endpoint,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(body)});setResult(await response.json());setBusy(false)}
   async function loadReceipt(file:File){try{const loaded=JSON.parse(await file.text()) as AgreementReceipt;setReceipt(loaded);setSignature(loaded.transactionSignature);setHash(loaded.agreementHash);setResult(null)}catch{setResult({verified:false,reason:"File is not valid JSON"})}}

@@ -20,3 +20,13 @@ The complete receipt workflow was subsequently executed with two distinct Ed2551
 - Explorer: https://explorer.solana.com/tx/3rYyV272QcMgJiQ6SUTxABzTppbwmWK3CRsZKtSY5noP8NJKeBcHuurs6Jc3RRq3dUpHd3wZPhabbkv8VvAQi6ML?cluster=devnet
 
 The machine-verifiable receipt is stored in `docs/LATEST_VERIFIED_RECEIPT.json` and can be uploaded directly to the public verifier.
+
+## Receipt protocol v2
+
+Protocol v2 adds canonical object hashing and binds both approvals to a unique negotiation identity, preventing a valid signature from being replayed for another negotiation with identical commercial terms.
+
+- Negotiation ID: `7e027661-2409-47da-97ca-a594d5cb092d`
+- Slot: `479548375`
+- Agreement hash: `1e1321fa26215891c548254c30ab1d33ec6de6124b8c20b1f6ce453dd0eb5cf0`
+- Transaction: `Kh6ck3wzaMeATq2q2ZaMEc7DqcBZ86qY7uHqctFtrLE59pVtvgeNQewikQ49iWf2AxpeKWXxEtFq2zwKMuamP35`
+- Explorer: https://explorer.solana.com/tx/Kh6ck3wzaMeATq2q2ZaMEc7DqcBZ86qY7uHqctFtrLE59pVtvgeNQewikQ49iWf2AxpeKWXxEtFq2zwKMuamP35?cluster=devnet

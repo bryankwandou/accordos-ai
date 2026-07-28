@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { Keypair, Transaction } from "@solana/web3.js";
-import { ACCORDOS_MEMO_PREFIX, createAgreementProofTransaction, hashAgreement } from "../src/lib/solana/proof.ts";
+import { ACCORDOS_MEMO_PREFIX, canonicalize, createAgreementProofTransaction, hashAgreement } from "../src/lib/solana/proof.ts";
 
 test("agreement hashing is deterministic and sensitive to terms", () => {
   const first = hashAgreement({ terms: { price: 43200 }, approvals: 2 });
@@ -10,6 +10,11 @@ test("agreement hashing is deterministic and sensitive to terms", () => {
   assert.equal(first, second);
   assert.notEqual(first, changed);
   assert.match(first, /^[a-f0-9]{64}$/);
+});
+
+test("canonical hashing ignores object insertion order", () => {
+  assert.equal(canonicalize({ z: 1, a: { y: 2, b: 3 } }), canonicalize({ a: { b: 3, y: 2 }, z: 1 }));
+  assert.equal(hashAgreement({ price: 1, months: 12 }), hashAgreement({ months: 12, price: 1 }));
 });
 
 test("creates a wallet-signable devnet memo transaction", async () => {

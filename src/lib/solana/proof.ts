@@ -4,8 +4,14 @@ import { Connection, PublicKey, Transaction, TransactionInstruction } from "@sol
 export const MEMO_PROGRAM_ID = new PublicKey("MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr");
 export const ACCORDOS_MEMO_PREFIX = "ACCORDOS:";
 
+export function canonicalize(value: unknown): string {
+  if (value === null || typeof value !== "object") return JSON.stringify(value);
+  if (Array.isArray(value)) return `[${value.map(canonicalize).join(",")}]`;
+  return `{${Object.entries(value as Record<string, unknown>).sort(([left], [right]) => left.localeCompare(right)).map(([key, item]) => `${JSON.stringify(key)}:${canonicalize(item)}`).join(",")}}`;
+}
+
 export function hashAgreement(agreement: unknown) {
-  return createHash("sha256").update(JSON.stringify(agreement)).digest("hex");
+  return createHash("sha256").update(canonicalize(agreement)).digest("hex");
 }
 
 export async function createAgreementProofTransaction(agreement: unknown, walletAddress: string) {

@@ -1,0 +1,6 @@
+import Link from "next/link";
+import { ArrowLeft, ArrowUpRight, Check, Clock3, Gauge, Scale } from "lucide-react";
+
+export default function DashboardPage() {
+  return <main className="dashboard-shell"><header className="lab-topbar"><Link href="/"><ArrowLeft size={17} /> AccordOS</Link><b>Outcome analytics</b><Link href="/negotiations/demo">Live room <ArrowUpRight size={14} /></Link></header><section className="dashboard-content"><span className="eyebrow dark-eye">DEMO ORGANIZATION</span><h1>Negotiation outcomes</h1><p>Operational signals from completed and active sessions.</p><div className="metric-grid"><article><span><Check /></span><small>Agreement rate</small><b>78%</b><em>7 of 9 completed</em></article><article><span><Clock3 /></span><small>Median time to terms</small><b>18m</b><em>Across active templates</em></article><article><span><Gauge /></span><small>Average rounds</small><b>4.2</b><em>Before convergence</em></article><article><span><Scale /></span><small>Deadlock rate</small><b>11%</b><em>With explicit gap reports</em></article></div><div className="analytics-card"><div><h2>Round efficiency</h2><p>Share of negotiations reaching a terminal state by round.</p></div><div className="bar-chart">{[42,68,81,90,96,100].map((height,index)=><span key={height} style={{height:`${height}%`}}><i>R{index+1}</i></span>)}</div></div></section></main>;
+}

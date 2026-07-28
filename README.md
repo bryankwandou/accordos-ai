@@ -17,10 +17,9 @@ Open `http://localhost:3000` and use **Run a live negotiation**.
 Copy `.env.example` to `.env.local`. The app works without secrets in deterministic demo mode.
 
 - `GROQ_API_KEY` adds a live Groq-generated strategic explanation.
-- `SOLANA_PRIVATE_KEY` accepts a JSON secret-key byte array for a funded devnet signer.
 - `SOLANA_RPC_URL` defaults to Solana devnet.
 
-No wallet secret is exposed to the browser. Without a signer, the proof endpoint returns the exact digest that is ready to anchor.
+The browser connects directly to Phantom or Solflare. AccordOS prepares an unsigned memo transaction; the connected wallet signs and submits it, then the verification endpoint reads the confirmed devnet transaction and matches the agreement hash. No wallet secret reaches the app.
 
 ## Validation
 
@@ -32,3 +31,5 @@ npm run build
 ```
 
 See `docs/DECISIONS.md`, `docs/SECURITY.md`, and `docs/PITCH.md` for architecture, boundaries, and submission material.
+
+A real confirmed proof and its verification record are documented in `docs/DEVNET_PROOF.md`.

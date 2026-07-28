@@ -22,7 +22,7 @@ After dual approval, AccordOS anchors a hash of the final agreement record to So
 2. Start agents and watch three validated rounds.
 3. Review the converged structured terms.
 4. Approve once for each organization.
-5. Create the proof and open the Solana Explorer transaction when a funded devnet signer is configured.
+5. Connect Phantom or Solflare, sign the prepared devnet memo transaction, and watch AccordOS verify the confirmed hash before opening Solana Explorer.
 
 ## Business model
 

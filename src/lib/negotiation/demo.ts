@@ -1,6 +1,6 @@
-import type { ConstraintProfile, NegotiationTurn, TermValue } from "./types";
-import { checkForConvergence } from "./check-convergence";
-import { validateOfferAgainstConstraints } from "./validate-offer";
+import type { ConstraintProfile, NegotiationTurn, TermValue } from "./types.ts";
+import { checkForConvergence } from "./check-convergence.ts";
+import { validateOfferAgainstConstraints } from "./validate-offer.ts";
 
 export const buyerConstraints: ConstraintProfile = {
   parameters: {
@@ -9,14 +9,7 @@ export const buyerConstraints: ConstraintProfile = {
     paymentDays: { floor: 30, priority: "flexible" },
     supportHours: { floor: 20, priority: "high" },
   },
-  nonNegotiableTerms: [
-    {
-      key: "autoRenewal",
-      term: "renewal requires explicit approval",
-      expectedValue: false,
-      isHardRequirement: true,
-    },
-  ],
+  nonNegotiableTerms: [{ key: "autoRenewal", term: "renewal requires explicit approval", expectedValue: false, isHardRequirement: true }],
 };
 
 export const vendorConstraints: ConstraintProfile = {
@@ -26,14 +19,7 @@ export const vendorConstraints: ConstraintProfile = {
     paymentDays: { ceiling: 45, priority: "flexible" },
     supportHours: { ceiling: 30, priority: "high" },
   },
-  nonNegotiableTerms: [
-    {
-      key: "autoRenewal",
-      term: "renewal clause must be explicitly stated",
-      expectedValue: false,
-      isHardRequirement: true,
-    },
-  ],
+  nonNegotiableTerms: [{ key: "autoRenewal", term: "renewal clause must be explicitly stated", expectedValue: false, isHardRequirement: true }],
 };
 
 const candidates: Array<Record<string, TermValue>> = [
@@ -42,40 +28,28 @@ const candidates: Array<Record<string, TermValue>> = [
   { annualPrice: 43200, contractMonths: 18, paymentDays: 30, supportHours: 24, autoRenewal: false },
 ];
 
-export function runDeterministicDemo(): {
-  turns: NegotiationTurn[];
-  converged: boolean;
-  finalTerms?: Record<string, TermValue>;
-} {
+export function runDeterministicDemo() {
+  const reasons = [
+    "Opens inside our authority while testing the vendor's flexibility on term length.",
+    "Trades a longer commitment for service depth without crossing the price floor.",
+    "Splits the remaining distance across price, term, and support instead of forcing one concession.",
+  ];
   const turns: NegotiationTurn[] = candidates.map((terms, index) => {
     const side = index % 2 === 0 ? "buyer" : "vendor";
     const constraints = side === "buyer" ? buyerConstraints : vendorConstraints;
-    const result = validateOfferAgainstConstraints(terms, constraints);
     return {
       id: `turn-${index + 1}`,
       round: index + 1,
       side,
       company: side === "buyer" ? "Northstar Labs" : "Helio Cloud",
-      type: index === 0 ? "opening" : "counter",
+      type: index === 0 ? "opening" : index === 2 ? "accept" : "counter",
       terms,
-      reasoning:
-        index === 0
-          ? "Opens inside our authority while testing the vendor’s flexibility on term length."
-          : index === 1
-            ? "Trades a longer commitment for service depth without crossing the price floor."
-            : "Splits the remaining distance across price, term, and support instead of forcing one concession.",
-      valid: result.isValid,
+      reasoning: reasons[index],
+      valid: validateOfferAgainstConstraints(terms, constraints).isValid,
+      generatedBy: "deterministic",
     };
   });
   const finalTerms = candidates.at(-1)!;
-  const convergence = checkForConvergence(
-    finalTerms,
-    buyerConstraints,
-    vendorConstraints,
-  );
-  return {
-    turns,
-    converged: convergence.hasConverged,
-    finalTerms: convergence.hasConverged ? convergence.finalTerms : undefined,
-  };
+  const convergence = checkForConvergence(finalTerms, buyerConstraints, vendorConstraints);
+  return { turns, converged: convergence.hasConverged, finalTerms: convergence.hasConverged ? convergence.finalTerms : undefined };
 }

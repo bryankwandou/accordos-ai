@@ -1,37 +1,41 @@
 import { createHash } from "node:crypto";
-import {
-  Connection,
-  Keypair,
-  PublicKey,
-  Transaction,
-  TransactionInstruction,
-  sendAndConfirmTransaction,
-} from "@solana/web3.js";
+import { Connection, PublicKey, Transaction, TransactionInstruction } from "@solana/web3.js";
+
+export const MEMO_PROGRAM_ID = new PublicKey("MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr");
+export const ACCORDOS_MEMO_PREFIX = "ACCORDOS:";
 
 export function hashAgreement(agreement: unknown) {
   return createHash("sha256").update(JSON.stringify(agreement)).digest("hex");
 }
 
-export async function anchorAgreementOnDevnet(agreement: unknown) {
-  const secret = process.env.SOLANA_PRIVATE_KEY;
-  if (!secret) {
-    return { mode: "preview" as const, hash: hashAgreement(agreement) };
-  }
-
-  const signer = Keypair.fromSecretKey(Uint8Array.from(JSON.parse(secret)));
-  const connection = new Connection(
-    process.env.SOLANA_RPC_URL ?? "https://api.devnet.solana.com",
-    "confirmed",
-  );
-  const memoProgram = new PublicKey("MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr");
+export async function createAgreementProofTransaction(agreement: unknown, walletAddress: string) {
+  const connection = new Connection(process.env.SOLANA_RPC_URL ?? "https://api.devnet.solana.com", "confirmed");
+  const wallet = new PublicKey(walletAddress);
   const hash = hashAgreement(agreement);
-  const transaction = new Transaction().add(
-    new TransactionInstruction({
-      keys: [],
-      programId: memoProgram,
-      data: Buffer.from(`ACCORDOS:${hash}`, "utf8"),
-    }),
-  );
-  const signature = await sendAndConfirmTransaction(connection, transaction, [signer]);
-  return { mode: "devnet" as const, hash, signature };
+  const transaction = new Transaction({
+    feePayer: wallet,
+    recentBlockhash: (await connection.getLatestBlockhash("confirmed")).blockhash,
+  }).add(new TransactionInstruction({
+    keys: [{ pubkey: wallet, isSigner: true, isWritable: false }],
+    programId: MEMO_PROGRAM_ID,
+    data: Buffer.from(`${ACCORDOS_MEMO_PREFIX}${hash}`, "utf8"),
+  }));
+  return { hash, transaction: transaction.serialize({ requireAllSignatures: false }).toString("base64") };
+}
+
+export async function verifyAgreementProof(signature: string, expectedHash: string) {
+  const connection = new Connection(process.env.SOLANA_RPC_URL ?? "https://api.devnet.solana.com", "confirmed");
+  const transaction = await connection.getParsedTransaction(signature, { commitment: "confirmed", maxSupportedTransactionVersion: 0 });
+  if (!transaction) return { verified: false, reason: "Transaction is not confirmed on devnet" };
+  const expectedMemo = `${ACCORDOS_MEMO_PREFIX}${expectedHash}`;
+  const found = transaction.transaction.message.instructions.some((instruction) => {
+    if (!("parsed" in instruction)) return false;
+    return JSON.stringify(instruction.parsed).includes(expectedMemo);
+  });
+  return {
+    verified: found,
+    reason: found ? undefined : "Transaction does not contain the expected AccordOS agreement hash",
+    slot: transaction.slot,
+    blockTime: transaction.blockTime,
+  };
 }

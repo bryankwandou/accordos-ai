@@ -12,7 +12,7 @@ npm run dev
 
 Open `http://localhost:3000` and use **Run a live negotiation**.
 
-The demo includes convergence, a mathematically impossible deadlock, an adversarial override challenge, dual approval, wallet signing, and public devnet verification at `/verify`.
+The demo includes convergence, a mathematically impossible deadlock, an adversarial override challenge, two distinct wallet-signed approvals, proof signing, and public devnet verification at `/verify`.
 
 ## Environment
 

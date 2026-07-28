@@ -5,6 +5,8 @@
 - Constraints are authenticated-encrypted with organization-bound keys.
 - Both organizations approve identical final terms before proof creation.
 - Solana receives only a cryptographic digest, never private terms.
+- Phantom or Solflare signs the proof transaction client-side; wallet secrets never reach AccordOS.
+- The verifier fetches the confirmed devnet transaction and matches its memo to the expected agreement hash.
 - API inputs are schema-validated before use.
 
 This repository is a working product demonstration, not a completed compliance program. Production rollout requires managed identity, PostgreSQL tenant isolation, KMS-backed key rotation, audit retention, rate limiting, monitoring, incident response, penetration testing, and legal review.

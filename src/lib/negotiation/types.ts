@@ -33,4 +33,5 @@ export interface NegotiationTurn {
   terms: Record<string, TermValue>;
   reasoning: string;
   valid: boolean;
+  generatedBy?: "groq" | "deterministic";
 }

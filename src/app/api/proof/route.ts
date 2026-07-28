@@ -12,7 +12,8 @@ export async function POST(request: Request) {
   const parsed = schema.safeParse(await request.json());
   if (!parsed.success) return NextResponse.json({ error: "Valid terms, two approvals, and a wallet are required" }, { status: 400 });
   try {
-    return NextResponse.json(await createAgreementProofTransaction(parsed.data, parsed.data.walletAddress));
+    const agreement = { terms: parsed.data.terms, approvals: parsed.data.approvals, version: 1 };
+    return NextResponse.json(await createAgreementProofTransaction(agreement, parsed.data.walletAddress));
   } catch (error) {
     return NextResponse.json({ error: error instanceof Error ? error.message : "Could not create proof transaction" }, { status: 502 });
   }

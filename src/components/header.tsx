@@ -9,6 +9,7 @@ export function Header() {
       <nav aria-label="Main navigation">
         <Link href="/#how">How it works</Link>
         <Link href="/security">Security</Link>
+        <Link href="/verify">Verify proof</Link>
         <Link href="/pricing">Pricing</Link>
       </nav>
       <Link className="button button-small" href="/negotiations/demo">

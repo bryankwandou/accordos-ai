@@ -22,3 +22,9 @@ test("creates a wallet-signable devnet memo transaction", async () => {
   assert.equal(transaction.instructions[0]?.data.toString(), `${ACCORDOS_MEMO_PREFIX}${proof.hash}`);
   assert.equal(transaction.instructions[0]?.keys[0]?.isSigner, true);
 });
+
+test("proof content excludes the fee-paying wallet identity", () => {
+  const agreement = { terms: { price: 43200 }, approvals: 2, version: 1 };
+  assert.equal(hashAgreement(agreement), hashAgreement({ ...agreement }));
+  assert.notEqual(hashAgreement(agreement), hashAgreement({ ...agreement, walletAddress: "must-not-be-hashed" }));
+});

@@ -1,18 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import { Check, ExternalLink, LoaderCircle, Search, ShieldX } from "lucide-react";
-import { motion } from "framer-motion";
+import { useRef, useState } from "react";
+import { Check, ExternalLink, FileJson, LoaderCircle, Search, ShieldX, Upload } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import type { AgreementReceipt } from "@/lib/solana/receipt";
 
 export function ProofVerifier() {
-  const [signature, setSignature] = useState("58Lk51jNa68RnMCgwVxMnZBE5FnwTVcyqGWebi9v4wFZKES8vMeR8ft2ssom5stkVFuMvEfpDiKHhrexSq3kM41G");
-  const [hash, setHash] = useState("82dc196df69129f98f33bb46297569b3169f45c37c0fbee6a5b6419d5589703f");
-  const [result, setResult] = useState<{ verified: boolean; reason?: string; slot?: number } | null>(null);
-  const [busy, setBusy] = useState(false);
-  async function verify() {
-    setBusy(true); setResult(null);
-    const response = await fetch("/api/proof/verify", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ signature, hash }) });
-    setResult(await response.json()); setBusy(false);
-  }
-  return <div className="verifier-card"><label>Devnet transaction signature<input value={signature} onChange={(event) => setSignature(event.target.value.trim())} /></label><label>Expected agreement hash<input value={hash} onChange={(event) => setHash(event.target.value.trim())} /></label><button className="button" onClick={verify} disabled={busy}>{busy ? <LoaderCircle className="spin" size={16} /> : <Search size={16} />} Verify on devnet</button>{result && <motion.div className={result.verified ? "verification-result valid-result" : "verification-result invalid-result"} initial={{opacity:0,y:10}} animate={{opacity:1,y:0}}>{result.verified ? <Check /> : <ShieldX />}<span><b>{result.verified ? "Cryptographic proof verified" : "Proof did not match"}</b><small>{result.verified ? `Confirmed in slot ${result.slot}` : result.reason}</small></span>{result.verified && <a target="_blank" rel="noreferrer" href={`https://explorer.solana.com/tx/${signature}?cluster=devnet`}>Explorer <ExternalLink size={12} /></a>}</motion.div>}</div>;
+  const [signature,setSignature]=useState("3rYyV272QcMgJiQ6SUTxABzTppbwmWK3CRsZKtSY5noP8NJKeBcHuurs6Jc3RRq3dUpHd3wZPhabbkv8VvAQi6ML");
+  const [hash,setHash]=useState("b2f11b4002eda9a41150304ca2953429d60b462dc9c030e8ab0ab5d24df1580d");
+  const [receipt,setReceipt]=useState<AgreementReceipt|null>(null); const [result,setResult]=useState<{verified:boolean;reason?:string;slot?:number;signaturesValid?:boolean;onChainValid?:boolean}|null>(null); const [busy,setBusy]=useState(false); const fileRef=useRef<HTMLInputElement>(null);
+  async function verify(){setBusy(true);setResult(null);const endpoint=receipt?"/api/receipts/verify":"/api/proof/verify";const body=receipt??{signature,hash};const response=await fetch(endpoint,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(body)});setResult(await response.json());setBusy(false)}
+  async function loadReceipt(file:File){try{const loaded=JSON.parse(await file.text()) as AgreementReceipt;setReceipt(loaded);setSignature(loaded.transactionSignature);setHash(loaded.agreementHash);setResult(null)}catch{setResult({verified:false,reason:"File is not valid JSON"})}}
+  return <div className="verifier-card"><div className="verify-tabs"><button className={!receipt?"active":""} onClick={()=>setReceipt(null)}>Hash + transaction</button><button className={receipt?"active":""} onClick={()=>fileRef.current?.click()}>Agreement receipt</button></div><input ref={fileRef} type="file" accept="application/json" hidden onChange={(event)=>event.target.files?.[0]&&void loadReceipt(event.target.files[0])}/>{receipt?<motion.div className="receipt-loaded" initial={{opacity:0,y:8}} animate={{opacity:1,y:0}}><FileJson/><span><b>AccordOS receipt loaded</b><small>{receipt.approvals.length} wallet approvals · {receipt.transactionSignature.slice(0,12)}…</small></span><button onClick={()=>fileRef.current?.click()}><Upload size={13}/> Replace</button></motion.div>:<><label>Devnet transaction signature<input value={signature} onChange={(event)=>setSignature(event.target.value.trim())}/></label><label>Expected agreement hash<input value={hash} onChange={(event)=>setHash(event.target.value.trim())}/></label></>}<button className="button" onClick={verify} disabled={busy}>{busy?<LoaderCircle className="spin" size={16}/>:<Search size={16}/>} {receipt?"Verify signatures + devnet":"Verify on devnet"}</button><AnimatePresence>{result&&<motion.div className={result.verified?"verification-result valid-result":"verification-result invalid-result"} initial={{opacity:0,y:10}} animate={{opacity:1,y:0}} exit={{opacity:0}}>{result.verified?<Check/>:<ShieldX/>}<span><b>{result.verified?"Complete receipt verified":"Proof did not match"}</b><small>{result.verified?`${receipt?"Two signatures valid · ":""}Confirmed in slot ${result.slot}`:result.reason}</small></span>{result.verified&&<a target="_blank" rel="noreferrer" href={`https://explorer.solana.com/tx/${signature}?cluster=devnet`}>Explorer <ExternalLink size={12}/></a>}</motion.div>}</AnimatePresence></div>;
 }

@@ -9,3 +9,14 @@ AccordOS executed and independently re-read a real Solana devnet memo transactio
 - Explorer: https://explorer.solana.com/tx/58Lk51jNa68RnMCgwVxMnZBE5FnwTVcyqGWebi9v4wFZKES8vMeR8ft2ssom5stkVFuMvEfpDiKHhrexSq3kM41G?cluster=devnet
 
 Verification fetched the confirmed transaction from devnet and matched its memo to `ACCORDOS:<agreement-hash>`. No commercial terms or private constraints were written on-chain.
+
+## Dual-approval receipt proof
+
+The complete receipt workflow was subsequently executed with two distinct Ed25519 approvals bound to the exact agreement terms.
+
+- Slot: `479541319`
+- Agreement hash: `b2f11b4002eda9a41150304ca2953429d60b462dc9c030e8ab0ab5d24df1580d`
+- Transaction: `3rYyV272QcMgJiQ6SUTxABzTppbwmWK3CRsZKtSY5noP8NJKeBcHuurs6Jc3RRq3dUpHd3wZPhabbkv8VvAQi6ML`
+- Explorer: https://explorer.solana.com/tx/3rYyV272QcMgJiQ6SUTxABzTppbwmWK3CRsZKtSY5noP8NJKeBcHuurs6Jc3RRq3dUpHd3wZPhabbkv8VvAQi6ML?cluster=devnet
+
+The machine-verifiable receipt is stored in `docs/LATEST_VERIFIED_RECEIPT.json` and can be uploaded directly to the public verifier.

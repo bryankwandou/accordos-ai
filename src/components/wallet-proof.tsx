@@ -29,3 +29,4 @@ export function WalletProof({ terms, negotiationId }: { terms: Record<string, Te
 
 
 
+

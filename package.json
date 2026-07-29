@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "node --test --experimental-strip-types tests/*.test.ts",
-    "test:production": "node scripts/production-smoke.mjs"
+    "test:production": "node scripts/production-smoke.mjs",
+    "audit:production": "node scripts/exhaustive-audit.mjs"
   },
   "dependencies": {
     "@solana/web3.js": "^1.98.4",

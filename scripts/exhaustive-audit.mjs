@@ -1,8 +1,8 @@
-const base = process.env.BASE_URL ?? "https://accordos-ai.vercel.app";
+﻿const base = process.env.BASE_URL ?? "https://accordos-ai.vercel.app";
 const queue = ["/"];
 const visited = new Map();
 const broken = [];
-const mojibake = /(?:Ã|Â|â€¦|ƒ\?|Г\?|�)/;
+const mojibake = /(?:\u00c3[\u0080-\u00bf]|\u00c2[\u0080-\u00bf]|\ufffd)/;
 
 while (queue.length) {
   const path = queue.shift();
@@ -43,3 +43,4 @@ const missing = await fetch(`${base}/audit-intentional-missing-route`);
 if (missing.status !== 404 || !(await missing.text()).includes("This route does not exist")) broken.push("Custom 404 contract failed");
 if (broken.length) { console.error(broken.join("\n")); process.exit(1); }
 console.log(JSON.stringify({ base, crawledInternalResources: visited.size, unexpected404s: 0, apiContractFailures: 0, mojibakePages: 0 }, null, 2));
+

@@ -87,8 +87,9 @@ export default function Home() {
       </section>
 
       <section className="cta-section"><Reveal><span className="cta-mark"><i /><i /></span><h2>Move the deal forward.<br />Keep authority where it belongs.</h2><p>Run the working negotiation demo. No account or wallet required.</p><Link className="button light-button" href="/negotiations/demo">Open negotiation room <ArrowRight size={17} /></Link></Reveal></section>
-      <footer><Logo /><p>Deterministic authority rails for agent-led commerce.</p><div><Link href="/security">Security</Link><Link href="/pricing">Pricing</Link><Link href="/dashboard">Analytics</Link></div><small>Â© 2026 AccordOS. Attorney review recommended before production contracting.</small></footer>
+      <footer><Logo /><p>Deterministic authority rails for agent-led commerce.</p><div><Link href="/security">Security</Link><Link href="/pricing">Pricing</Link><Link href="/dashboard">Analytics</Link></div><small>Copyright 2026 AccordOS. Attorney review recommended before production contracting.</small></footer>
     </main>
   );
 }
+
 

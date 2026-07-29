@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import {
   ArrowRight,
   BadgeCheck,
@@ -19,7 +19,7 @@ import { Reveal } from "@/components/reveal";
 import { Logo } from "@/components/logo";
 
 const features = [
-  [KeyRound, "Private by architecture", "Each agent sees its own company’s limits and the shared transcript—never the other side’s private numbers."],
+  [KeyRound, "Private by architecture", "Each agent sees its own companyâ€™s limits and the shared transcriptâ€”never the other sideâ€™s private numbers."],
   [ShieldCheck, "Hard authority rails", "Every offer passes deterministic TypeScript validation. Out-of-bounds terms are rejected before transmission."],
   [Route, "Strategy you can inspect", "Follow each offer, concession, and stated rationale in one shared, time-stamped negotiation record."],
   [UsersRound, "Two signatures required", "Agents can find agreement. Only authorized people on both sides can approve the final proposal."],
@@ -82,12 +82,13 @@ export default function Home() {
       </section>
 
       <section className="section guardrail-section">
-        <Reveal><div className="guardrail-copy"><span className="eyebrow dark-eye">THE TRUST LAYER</span><h2>A prompt is not a policy.</h2><p>Models can misunderstand instructions. AccordOS treats model output as an untrusted proposal and subjects it to code-level validation against the acting company’s authority.</p><ul><li><Check size={16} /> Inclusive numeric boundaries and exact term checks</li><li><Check size={16} /> Missing, malformed, and non-finite values fail closed</li><li><Check size={16} /> The identical validator checks manual overrides</li><li><Check size={16} /> Convergence requires both private profiles to pass</li></ul><Link className="text-link dark-link" href="/security">Read the security model <ArrowRight size={15} /></Link></div></Reveal>
+        <Reveal><div className="guardrail-copy"><span className="eyebrow dark-eye">THE TRUST LAYER</span><h2>A prompt is not a policy.</h2><p>Models can misunderstand instructions. AccordOS treats model output as an untrusted proposal and subjects it to code-level validation against the acting companyâ€™s authority.</p><ul><li><Check size={16} /> Inclusive numeric boundaries and exact term checks</li><li><Check size={16} /> Missing, malformed, and non-finite values fail closed</li><li><Check size={16} /> The identical validator checks manual overrides</li><li><Check size={16} /> Convergence requires both private profiles to pass</li></ul><Link className="text-link dark-link" href="/security">Read the security model <ArrowRight size={15} /></Link></div></Reveal>
         <Reveal delay={0.15}><div className="code-card"><div className="code-top"><span><i /><i /><i /></span><small>validate-offer.ts</small><b>PASS</b></div><pre><code><span className="purple">if</span> (value &gt; constraint.ceiling) {`{`}{"\n"}  <span className="purple">return</span> reject({`{`}{"\n"}    reason: <span className="green">&quot;outside authority&quot;</span>{"\n"}  {`}`});{"\n"}{`}`}{"\n\n"}<span className="comment">{"// The offer never reaches the other side."}</span></code></pre><div className="test-row"><ShieldCheck size={18} /><span><b>47 adversarial checks</b><small>Boundary, type, omission, and isolation cases</small></span></div></div></Reveal>
       </section>
 
       <section className="cta-section"><Reveal><span className="cta-mark"><i /><i /></span><h2>Move the deal forward.<br />Keep authority where it belongs.</h2><p>Run the working negotiation demo. No account or wallet required.</p><Link className="button light-button" href="/negotiations/demo">Open negotiation room <ArrowRight size={17} /></Link></Reveal></section>
-      <footer><Logo /><p>Deterministic authority rails for agent-led commerce.</p><div><Link href="/security">Security</Link><Link href="/pricing">Pricing</Link><Link href="/dashboard">Analytics</Link></div><small>© 2026 AccordOS. Attorney review recommended before production contracting.</small></footer>
+      <footer><Logo /><p>Deterministic authority rails for agent-led commerce.</p><div><Link href="/security">Security</Link><Link href="/pricing">Pricing</Link><Link href="/dashboard">Analytics</Link></div><small>Â© 2026 AccordOS. Attorney review recommended before production contracting.</small></footer>
     </main>
   );
 }
+
